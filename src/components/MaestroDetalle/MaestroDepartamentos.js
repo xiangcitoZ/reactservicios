@@ -1,27 +1,20 @@
 import React, { Component } from 'react'
 import axios from'axios';
-import Global from '../Global';
-
-export default class DepartamentosEmpleados extends Component {
+import Global from '../../Global';
+import MaestroEmpleados from './MaestroEmpleados';
+export default class MaestroDepartamentos extends Component {
     slectedDepartamentosRef = React.createRef();
     state = {
         departamentos:[],
         status : false, 
-        empleados:[]
+       idDepartamento: 0
     }
     mostrarEmpleados =(e) =>{
         e.preventDefault();
         var idDept = this.slectedDepartamentosRef.current.value;
-        var request2 = "api/Empleados/EmpleadosDepartamento/" + idDept;
-        console.log(idDept)
-        var url = Global.urlEmpleados+request2
-        console.log(url);
-        axios.get(url).then(res =>{
-            this.setState({
-                status:true,
-                empleados: res.data
-            })
-        })
+        this.setState({
+            idDepartamento : idDept
+        });
 
     }
     loadDepartamentos =() =>{
@@ -42,7 +35,7 @@ export default class DepartamentosEmpleados extends Component {
   render() {
     return (
       <div>
-        <h1>Buscardor de Empleados</h1>
+        <h1 style={{color:"blue"}}>Maestro Departamentos Empleados</h1>
         <form onSubmit={this.mostrarEmpleados}>
         <select ref={this.slectedDepartamentosRef}>
         {
@@ -60,16 +53,13 @@ export default class DepartamentosEmpleados extends Component {
         <button>
             Mostrar empleados
         </button>
+        <h2 style={{color:"red"}}>
+            Departamento seleccionado : {this.state.idDepartamento}
+        </h2>
         </form>
-        {
-            this.state.status == true &&(
-                this.state.empleados.map((empl,index)=>{
-                    return(<li 
-                     key={empl.idEmpleado}>
-                        {empl.apellido}
-                    </li>)
-                })
-            )
+        {   this.state.idDepartamento != 0 &&
+                <MaestroEmpleados 
+                 iddepartamento={this.state.idDepartamento}/>
         }
       </div>
     )
